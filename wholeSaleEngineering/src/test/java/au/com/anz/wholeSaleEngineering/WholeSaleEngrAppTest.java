@@ -1,47 +1,31 @@
 package au.com.anz.wholeSaleEngineering;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Unit test for WholeSaleEngrApp.
+ * Integration test for WholeSaleEngrApp
+ * Refactored to use JUnit 5
+ * 
  * @author Suwath Mihindukulasooriya
+ * @author Refactored for Java 21
+ * @date 2024
  */
-public class WholeSaleEngrAppTest 
-    extends TestCase
-{
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public WholeSaleEngrAppTest( String testName )
-    {
-        super( testName );
+@SpringBootTest
+class WholeSaleEngrAppTest {
+
+    @Test
+    void contextLoads() {
+        // This test will fail if the application context cannot start
+        assertThat(true).isTrue();
     }
 
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( WholeSaleEngrAppTest.class );
-    }
-
-    /**
-     * Rigourous Test :-)
-     */
-    public void testGetAccount()
-    {
-        assertTrue( true );
-    }
-    
-    /**
-     * Rigourous Test :-)
-     */
-    public void testGetAccountTransaction()
-    {
-        assertTrue( true );
+    @Test
+    void testApplicationStartup() {
+        // Test that the application can be instantiated
+        WholeSaleEngrApp app = new WholeSaleEngrApp();
+        assertThat(app).isNotNull();
     }
 }

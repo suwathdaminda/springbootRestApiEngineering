@@ -1,101 +1,204 @@
 package au.com.anz.wholeSaleEngineering.service;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.time.format.DateTimeFormatterBuilder;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import au.com.anz.wholeSaleEngineering.Account;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import au.com.anz.wholeSaleEngineering.Account;
+import java.util.List;
 
 /**
- * Restful service implementation for Account View
+ * REST Controller for Account operations
+ * Refactored to use PostgreSQL database via Spring Data JPA
+ * 
  * @author Suwath Mihindukulasooriya
- *
+ * @author Refactored for Java 21 with PostgreSQL
+ * @date 2024
  */
 @RestController
+@RequestMapping("/api")
+@Tag(name = "Account Management", description = "APIs for managing customer accounts")
 public class AccountServiceController {
 
+	private static final Logger logger = LoggerFactory.getLogger(AccountServiceController.class);
 	
-	private static List<Account> accountDetails = new ArrayList<>();
-	   
-	// Account Details
-	/** @ToDo: Implement using a database.**/ 
-	static {
-		
-			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-			GregorianCalendar calendar = new GregorianCalendar();
-	    
-			Account SGSavings726 = new Account();
-		    SGSavings726.setAccountNo("585309209");
-		    SGSavings726.setAccountName("SGSavings726");
-		    SGSavings726.setAccountType("Savings");
-		    calendar.set(2018, 10, 8);
-		    String balanceDate = dateFormat.format(calendar.getTime());
-		    SGSavings726.setBalanceDate(balanceDate);
-		    SGSavings726.setCurrency("SGD");
-		    SGSavings726.setOpeningAvailBal(new BigDecimal(84327.51).setScale(2, RoundingMode.DOWN));
-		    accountDetails.add(SGSavings726);
-	      
-		    Account AUSavings933 = new Account();
-		    AUSavings933.setAccountNo("791066619");
-		    AUSavings933.setAccountName("AUSavings933");
-		    AUSavings933.setAccountType("Savings");
-		    calendar.set(2018, 10, 8);
-		    balanceDate = dateFormat.format(calendar.getTime());
-		    AUSavings933.setBalanceDate(balanceDate);
-		    AUSavings933.setCurrency("AUD");
-		    AUSavings933.setOpeningAvailBal(new BigDecimal(88005.93).setScale(2, RoundingMode.DOWN));
-		    accountDetails.add(AUSavings933);
-		    
-		    Account AUCurrent433 = new Account();
-		    AUCurrent433.setAccountNo("321143048");
-		    AUCurrent433.setAccountName("AUCurrent433");
-		    AUCurrent433.setAccountType("Current");
-		    calendar.set(2018, 10, 8);
-		    balanceDate = dateFormat.format(calendar.getTime());
-		    AUCurrent433.setBalanceDate(balanceDate);
-		    AUCurrent433.setCurrency("AUD");
-		    AUCurrent433.setOpeningAvailBal(new BigDecimal(38010.62).setScale(2, RoundingMode.DOWN));
-		    accountDetails.add(AUCurrent433);
-		    
-		    Account SGCurrent166 = new Account();
-		    SGCurrent166.setAccountNo("347786244");
-		    SGCurrent166.setAccountName("SGCurrent166");
-		    SGCurrent166.setAccountType("Current");
-		    calendar.set(2018, 10, 8);
-		    balanceDate = dateFormat.format(calendar.getTime());
-		    SGCurrent166.setBalanceDate(balanceDate);
-		    SGCurrent166.setCurrency("SGD");
-		    SGCurrent166.setOpeningAvailBal(new BigDecimal(50664.65).setScale(2, RoundingMode.DOWN));
-		    accountDetails.add(SGCurrent166);
-		    
-		    Account AUCurrent374 = new Account();
-		    AUCurrent374.setAccountNo("680168913");
-		    AUCurrent374.setAccountName("AUCurrent374");
-		    AUCurrent374.setAccountType("Current");
-		    calendar.set(2018, 10, 8);
-		    balanceDate = dateFormat.format(calendar.getTime());
-		    AUCurrent374.setBalanceDate(balanceDate);
-		    AUCurrent374.setCurrency("AUD");
-		    AUCurrent374.setOpeningAvailBal(new BigDecimal(41327.28).setScale(2, RoundingMode.DOWN));
-		    accountDetails.add(AUCurrent374);
+	@Autowired
+	private AccountService accountService;
+	
+	/**
+	 * Get all accounts
+	 */
+	@Operation(summary = "Get all accounts", description = "Retrieve all customer accounts from database")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Successfully retrieved accounts",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Account.class))),
+		@ApiResponse(responseCode = "500", description = "Internal server error")
+	})
+	@GetMapping("/accountDetail")
+	public ResponseEntity<List<Account>> getAllAccounts() {
+		logger.info("REST request to get all accounts");
+		try {
+			List<Account> accounts = accountService.getAllAccounts();
+			logger.info("Successfully retrieved {} accounts", accounts.size());
+			return ResponseEntity.ok(accounts);
+		} catch (Exception e) {
+			logger.error("Error retrieving accounts", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
 	}
-	   
-	   
-	@RequestMapping(value = "/accountDetail")
-	public ResponseEntity<Object> getAccount() {
-	   return new ResponseEntity<>(accountDetails, HttpStatus.OK);
+	
+	/**
+	 * Get account by ID
+	 */
+	@Operation(summary = "Get account by ID", description = "Retrieve a specific account by its ID")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Account found",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Account.class))),
+		@ApiResponse(responseCode = "404", description = "Account not found"),
+		@ApiResponse(responseCode = "500", description = "Internal server error")
+	})
+	@GetMapping("/accounts/{id}")
+	public ResponseEntity<Account> getAccountById(
+			@Parameter(description = "Account ID", required = true) @PathVariable Long id) {
+		logger.info("REST request to get account with ID: {}", id);
+		try {
+			return accountService.getAccountById(id)
+					.map(account -> {
+						logger.info("Account found: {}", account.getAccountNo());
+						return ResponseEntity.ok(account);
+					})
+					.orElseGet(() -> {
+						logger.warn("Account with ID {} not found", id);
+						return ResponseEntity.notFound().build();
+					});
+		} catch (Exception e) {
+			logger.error("Error retrieving account with ID: {}", id, e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
+	
+	/**
+	 * Get account by account number
+	 */
+	@Operation(summary = "Get account by account number", description = "Retrieve a specific account by its account number")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Account found",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Account.class))),
+		@ApiResponse(responseCode = "404", description = "Account not found"),
+		@ApiResponse(responseCode = "500", description = "Internal server error")
+	})
+	@GetMapping("/accounts/byNumber/{accountNo}")
+	public ResponseEntity<Account> getAccountByAccountNo(
+			@Parameter(description = "Account Number", required = true) @PathVariable String accountNo) {
+		logger.info("REST request to get account with number: {}", accountNo);
+		try {
+			return accountService.getAccountByAccountNo(accountNo)
+					.map(account -> {
+						logger.info("Account found: {}", account.getAccountName());
+						return ResponseEntity.ok(account);
+					})
+					.orElseGet(() -> {
+						logger.warn("Account with number {} not found", accountNo);
+						return ResponseEntity.notFound().build();
+					});
+		} catch (Exception e) {
+			logger.error("Error retrieving account with number: {}", accountNo, e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
+	
+	/**
+	 * Create new account
+	 */
+	@Operation(summary = "Create account", description = "Create a new customer account")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "201", description = "Account created successfully",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Account.class))),
+		@ApiResponse(responseCode = "400", description = "Invalid input"),
+		@ApiResponse(responseCode = "500", description = "Internal server error")
+	})
+	@PostMapping("/accounts")
+	public ResponseEntity<Account> createAccount(
+			@Parameter(description = "Account object to create", required = true)
+			@Valid @RequestBody Account account) {
+		logger.info("REST request to create account: {}", account.getAccountNo());
+		try {
+			Account createdAccount = accountService.createAccount(account);
+			logger.info("Successfully created account with ID: {}", createdAccount.getId());
+			return ResponseEntity.status(HttpStatus.CREATED).body(createdAccount);
+		} catch (IllegalArgumentException e) {
+			logger.error("Invalid account data: {}", e.getMessage());
+			return ResponseEntity.badRequest().build();
+		} catch (Exception e) {
+			logger.error("Error creating account", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
+	
+	/**
+	 * Update existing account
+	 */
+	@Operation(summary = "Update account", description = "Update an existing customer account")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Account updated successfully",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Account.class))),
+		@ApiResponse(responseCode = "404", description = "Account not found"),
+		@ApiResponse(responseCode = "400", description = "Invalid input"),
+		@ApiResponse(responseCode = "500", description = "Internal server error")
+	})
+	@PutMapping("/accounts/{id}")
+	public ResponseEntity<Account> updateAccount(
+			@Parameter(description = "Account ID", required = true) @PathVariable Long id,
+			@Parameter(description = "Updated account object", required = true)
+			@Valid @RequestBody Account account) {
+		logger.info("REST request to update account with ID: {}", id);
+		try {
+			Account updatedAccount = accountService.updateAccount(id, account);
+			logger.info("Successfully updated account: {}", updatedAccount.getAccountNo());
+			return ResponseEntity.ok(updatedAccount);
+		} catch (IllegalArgumentException e) {
+			logger.error("Account not found or invalid data: {}", e.getMessage());
+			return ResponseEntity.notFound().build();
+		} catch (Exception e) {
+			logger.error("Error updating account with ID: {}", id, e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
+	
+	/**
+	 * Delete account
+	 */
+	@Operation(summary = "Delete account", description = "Delete an existing customer account")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "204", description = "Account deleted successfully"),
+		@ApiResponse(responseCode = "404", description = "Account not found"),
+		@ApiResponse(responseCode = "500", description = "Internal server error")
+	})
+	@DeleteMapping("/accounts/{id}")
+	public ResponseEntity<Void> deleteAccount(
+			@Parameter(description = "Account ID", required = true) @PathVariable Long id) {
+		logger.info("REST request to delete account with ID: {}", id);
+		try {
+			accountService.deleteAccount(id);
+			logger.info("Successfully deleted account with ID: {}", id);
+			return ResponseEntity.noContent().build();
+		} catch (IllegalArgumentException e) {
+			logger.error("Account not found: {}", e.getMessage());
+			return ResponseEntity.notFound().build();
+		} catch (Exception e) {
+			logger.error("Error deleting account with ID: {}", id, e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
 	}
 }
