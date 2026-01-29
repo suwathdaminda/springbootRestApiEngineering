@@ -1,5 +1,11 @@
 au\com\anz\wholeSaleEngineering\Account.class
-au\com\anz\wholeSaleEngineering\service\AccountServiceController.class
-au\com\anz\wholeSaleEngineering\AccountTransaction.class
+au\com\anz\wholeSaleEngineering\repository\AccountRepository.class
+au\com\anz\wholeSaleEngineering\config\JasyptConfig.class
 au\com\anz\wholeSaleEngineering\service\AccountTransactionServiceController.class
+au\com\anz\wholeSaleEngineering\service\AccountService.class
+au\com\anz\wholeSaleEngineering\repository\AccountTransactionRepository.class
 au\com\anz\wholeSaleEngineering\WholeSaleEngrApp.class
+au\com\anz\wholeSaleEngineering\AccountTransaction.class
+au\com\anz\wholeSaleEngineering\util\JasyptPasswordEncryptor.class
+au\com\anz\wholeSaleEngineering\service\AccountServiceController.class
+au\com\anz\wholeSaleEngineering\service\AccountTransactionService.class

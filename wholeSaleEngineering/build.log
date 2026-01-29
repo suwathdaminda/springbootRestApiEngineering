@@ -1,0 +1,46 @@
+Picked up JAVA_TOOL_OPTIONS: -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------< au.com.anz:wholeSaleEngineering >-------------------
+[INFO] Building wholeSaleEngineering 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ wholeSaleEngineering ---
+[INFO] Deleting c:\dev\projects\CodePreferencesSprint\springbootRestApiEngineering\wholeSaleEngineering\target
+[INFO] 
+[INFO] --- resources:3.3.0:resources (default-resources) @ wholeSaleEngineering ---
+[INFO] Copying 1 resource
+[INFO] Copying 1 resource
+[INFO] 
+[INFO] --- compiler:3.10.1:compile (default-compile) @ wholeSaleEngineering ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 9 source files to c:\dev\projects\CodePreferencesSprint\springbootRestApiEngineering\wholeSaleEngineering\target\classes
+[INFO] 
+[INFO] --- resources:3.3.0:testResources (default-testResources) @ wholeSaleEngineering ---
+[INFO] skip non existing resourceDirectory c:\dev\projects\CodePreferencesSprint\springbootRestApiEngineering\wholeSaleEngineering\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.10.1:testCompile (default-testCompile) @ wholeSaleEngineering ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 3 source files to c:\dev\projects\CodePreferencesSprint\springbootRestApiEngineering\wholeSaleEngineering\target\test-classes
+[INFO] 
+[INFO] --- surefire:3.0.0:test (default-test) @ wholeSaleEngineering ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.3.0:jar (default-jar) @ wholeSaleEngineering ---
+[INFO] Building jar: c:\dev\projects\CodePreferencesSprint\springbootRestApiEngineering\wholeSaleEngineering\target\wholeSaleEngineering-0.0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] --- spring-boot:3.0.0:repackage (repackage) @ wholeSaleEngineering ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  7.694 s
+[INFO] Finished at: 2026-01-29T11:15:49+11:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:3.0.0:repackage (repackage) on project wholeSaleEngineering: Execution repackage of goal org.springframework.boot:spring-boot-maven-plugin:3.0.0:repackage failed: Unsupported class file major version 65 -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/PluginExecutionException

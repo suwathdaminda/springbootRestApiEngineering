@@ -1,0 +1,11 @@
+# Jasypt Configuration for Password Encryption
+# Set the encryption password via environment variable: JASYPT_ENCRYPTOR_PASSWORD
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
+    property:
+      prefix: "ENC("
+      suffix: ")"
+
+# Use environment variable for the encryption key
+# Set before running: export JASYPT_ENCRYPTOR_PASSWORD=your-secret-key
